@@ -119,12 +119,18 @@
     function constructGGProject ( project: GitLabProject ): GGProject {
         const folder =
             project.namespace ? project.namespace.full_path.split( "/" ) : [ ]
+        const folderNames =
+            project.name_with_namespace
+                .split( "/" )
+                .map( x => x.trim( ) )
         return {
-            id:         project.id,
-            name:       project.name,
-            path:       project.path,
-            url:        project.web_url,
-            folder:     folder
+            id:             project.id,
+            name:           project.name,
+            path:           project.path,
+            url:            project.web_url,
+            sshURL:         project.ssh_url_to_repo,
+            folderNames:    folderNames,
+            folder:         folder,
         }
     }
 

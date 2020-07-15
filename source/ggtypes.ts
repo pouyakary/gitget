@@ -16,6 +16,8 @@
 //
 
     export interface GGProject extends GGEntity {
+        folderNames:    string[ ]
+        sshURL:         string
     }
 
 //

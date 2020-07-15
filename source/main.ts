@@ -8,8 +8,8 @@
         "./gitlab/api.ts"
     import { get_configs } from
         "./configs.ts"
-    import { makeDireoctryForTree } from
-        "./system/fs.ts"
+    import { cloneTree } from
+        "./cloner.ts"
 
 //
 // ─── CONST CLIENT ───────────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@
     const gitTree =
         await client.makeTree( )
 
-    console.log( "Constructing the local directory.")
-    await makeDireoctryForTree( gitTree, configs.backupDirectory )
+    console.log( "Cloning (Takes much more!)")
+    await cloneTree( gitTree, configs.backupDirectory )
 
 // ────────────────────────────────────────────────────────────────────────────────

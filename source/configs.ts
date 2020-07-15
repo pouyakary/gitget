@@ -13,12 +13,14 @@
     interface GGEnvConfigs {
         ACCESS_TOKEN?:      string
         GITLAB_IP?:         string
+        GITLAB_USER_ID?:    string
         BACKUP_DIRECTORY?:  string
     }
 
     export interface GGConfigs {
         privateAccessToken:     string
         gitlabIP:               string
+        gitlabUserID:           string
         backupDirectory:        string
     }
 
@@ -32,6 +34,7 @@
         const result: GGConfigs = {
             privateAccessToken: "",
             gitlabIP:           "",
+            gitlabUserID:       "",
             backupDirectory:    "",
         }
 
@@ -45,6 +48,12 @@
             result.gitlabIP = configs.GITLAB_IP
         } else {
             throw "Could not find GitLab's IP in the ENV file (Key: GITLAB_IP)"
+        }
+
+        if ( configs.GITLAB_USER_ID ) {
+            result.gitlabUserID = configs.GITLAB_USER_ID
+        } else {
+            throw "Could not find GitLab's User ID in the ENV file (Key: GITLAB_USER_ID)"
         }
 
         if ( configs.BACKUP_DIRECTORY ) {
