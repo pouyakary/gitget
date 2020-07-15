@@ -30,6 +30,6 @@
         await client.makeTree( )
 
     console.log( "Cloning (Takes much more!)")
-    await cloneTree( gitTree, configs.backupDirectory )
+    await cloneTree( gitTree, configs )
 
 // ────────────────────────────────────────────────────────────────────────────────
