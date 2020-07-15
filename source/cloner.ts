@@ -43,10 +43,12 @@
         const destinationFolder =
             `${ configs.backupDirectory }/${ project.folderNames.join( "/" ) }`
         const url =
-            project.url.replace( "http://", `http://${ configs.gitlabUserID }:${ configs.privateAccessToken }@` )
+            project.url.replace( "http://", `http://${ configs.gitlabUserID }:${ configs.privateAccessToken }@` ) + ".git"
         const execResponse =
-            await exec( `git clone ${ url } ${ destinationFolder }` )
-        console.log( " ", execResponse.status )
+            await exec( `git clone ${ url } "${ destinationFolder }"` )
+        if ( !execResponse.output.match( /^\s*$/ ) ) {
+            console.log( "  >>>", execResponse.output )
+        }
     }
 
 // ────────────────────────────────────────────────────────────────────────────────
