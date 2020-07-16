@@ -64,7 +64,6 @@
                     const pageResults =
                         await this.requestGitLab<T[ ]>( command )
                     if ( pageResults.length == 0 ) {
-                        console.log( "Got", results.length )
                         return results
                     } else {
                         results = results.concat( pageResults )
@@ -88,7 +87,6 @@
             public async getProjects ( ): Promise<GGProject[ ]> {
                 return ( await this.getAll<GitLabProject>( "projects" ) )
                         .map( constructGGProject )
-                        .sort()
             }
 
         // ─────────────────────────────────────────────────────────────────
