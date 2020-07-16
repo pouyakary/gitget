@@ -14,23 +14,9 @@
 // ─── CLONE TREE ─────────────────────────────────────────────────────────────────
 //
 
-    export async function cloneTree ( tree: GGTree, configs: GGConfigs ) {
-        for ( const group of tree ) {
-            await cloneTreeGroup( group, configs )
-        }
-    }
-
-//
-// ─── CLONE TREE GROUP ───────────────────────────────────────────────────────────
-//
-
-    async function cloneTreeGroup ( group: GGTreeGroup, configs: GGConfigs ) {
-        for ( const project of group.projects ) {
+    export async function cloneProjects ( projects: GGProject[ ], configs: GGConfigs ) {
+        for ( const project of projects ) {
             await cloneProject( project, configs )
-        }
-
-        for ( const sub of group.subs ) {
-            await cloneTreeGroup( sub, configs )
         }
     }
 

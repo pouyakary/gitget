@@ -7,8 +7,6 @@
         "./gitlab-types.ts"
     import { GGGroup, GGProject } from
         "../ggtypes.ts"
-    import { makeGGTree } from
-        "./extended-gitlab/tree.ts"
 
 //
 // ─── GITLAB API ─────────────────────────────────────────────────────────────────
@@ -38,14 +36,11 @@
         // ─── CALL GITLAB ─────────────────────────────────────────────────
         //
 
-            private async requestGitLab ( command: string, ...options: string[ ] ) {
-                const allOptions =
-                    ( options.length > 0
-                        ? "?" + options.map( x => encodeURIComponent( x ) ).join( "&" )
-                        : ""
-                        )
+            private async requestGitLab<T> ( command: string ): Promise<T> {
+
                 const url =
-                    `http://${ this.GitLabIP }/api/v4/${ command }${ allOptions }`
+                    `http://${ this.GitLabIP }/api/v4/${ command }`
+
                 // console.log( "> calling:", url )
                 const call =
                     await fetch( url, {
@@ -57,21 +52,24 @@
             }
 
         //
-        // ─── MAKE GG TREE ────────────────────────────────────────────────
+        // ─── GET ALL ─────────────────────────────────────────────────────
         //
 
-            public async makeTree ( log = false ) {
-                return await makeGGTree( this, log )
-            }
-
-        //
-        // ─── PROJECTS ────────────────────────────────────────────────────
-        //
-
-            public async getProjects ( ): Promise<GGProject[ ]> {
-                const projects: GitLabProject[ ] =
-                    await this.requestGitLab( "projects" )
-                return projects.map( constructGGProject )
+            private async getAll<T> ( query: string ): Promise<T[ ]> {
+                let results =
+                    new Array<T> ( )
+                for ( let page = 1; true; page++ ) {
+                    const command =
+                        `${ query }?per_page=30&page=${ page }`
+                    const pageResults =
+                        await this.requestGitLab<T[ ]>( command )
+                    if ( pageResults.length == 0 ) {
+                        console.log( "Got", results.length )
+                        return results
+                    } else {
+                        results = results.concat( pageResults )
+                    }
+                }
             }
 
         //
@@ -79,33 +77,18 @@
         //
 
             public async getGroups ( ): Promise<GGGroup[ ]> {
-                const groups: GitLabGroup[ ] =
-                    await this.requestGitLab( "groups", "all_available=true" )
-                const ggg =
-                    groups.map( constructGGGroup )
-                return ggg
+                return ( await this.getAll<GitLabGroup>( "groups?all_available=true" ) )
+                        .map( constructGGGroup )
             }
 
         //
-        // ─── SUBGROUPS ───────────────────────────────────────────────────
+        // ─── GET PROJECT ─────────────────────────────────────────────────
         //
 
-            public async getSubgroupsOf ( group_id: number ): Promise<GGGroup[ ]> {
-                const subgroups: GitLabGroup[ ] =
-                    await this.requestGitLab( `/groups/${ group_id }/subgroups` )
-                const ggg =
-                    subgroups.map( constructGGGroup )
-                return ggg
-            }
-
-        //
-        // ─── GROUP PROJECTS ──────────────────────────────────────────────
-        //
-
-            public async getProjectsOfGroup ( group_id: number ): Promise<GGProject[ ]> {
-                const projects: GitLabProject[ ] =
-                    await this.requestGitLab( `/groups/${ group_id }/projects` )
-                return projects.map( constructGGProject )
+            public async getProjects ( ): Promise<GGProject[ ]> {
+                return ( await this.getAll<GitLabProject>( "projects" ) )
+                        .map( constructGGProject )
+                        .sort()
             }
 
         // ─────────────────────────────────────────────────────────────────

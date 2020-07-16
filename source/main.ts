@@ -8,7 +8,7 @@
         "./gitlab/api.ts"
     import { get_configs } from
         "./configs.ts"
-    import { cloneTree } from
+    import { cloneProjects } from
         "./cloner.ts"
 
 //
@@ -26,10 +26,10 @@
 
     console.log( )
     console.log( "Downloading GitLab Info. (Takes a few minutes...)")
-    const gitTree =
-        await client.makeTree( )
+    const projects =
+        await client.getProjects( )
 
     console.log( "Cloning (Takes much more!)")
-    await cloneTree( gitTree, configs )
+    await cloneProjects( projects, configs )
 
 // ────────────────────────────────────────────────────────────────────────────────
