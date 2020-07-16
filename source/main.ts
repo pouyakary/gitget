@@ -25,11 +25,14 @@
 //
 
     console.log( )
-    console.log( "Downloading GitLab Info. (Takes a few minutes...)")
+    console.log( "Downloading GitLab Info. (Takes a few minutes...)\n")
     const projects =
         await client.getProjects( )
 
-    console.log( "Cloning (Takes much more!)")
+    console.log( "Cloning (Takes much more!)\n")
     await cloneProjects( projects, configs )
+
+    console.log()
+    console.log("Done!\n")
 
 // ────────────────────────────────────────────────────────────────────────────────

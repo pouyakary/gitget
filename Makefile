@@ -1,7 +1,6 @@
 
 main  		= ./source/main.ts
-permissions = --allow-run --allow-net --allow-read --allow-write
-deno  		= deno run --unstable $(permissions)
+deno  		= deno run -A
 
 debug:
 	$(deno) $(main)
